@@ -12,8 +12,28 @@ import { MonoText } from '../components/StyledText';
 export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      postsandcomments: [],
+      justposts: []
+    }
+    //console.log("HI! I need some state here so I can show lots of posts!")
+    this.getPosts()
+  }
 
-    console.log("HI! I need some state here so I can show lots of posts!")
+  getPosts = () => {
+    fetch("https://webdev.cse.buffalo.edu/hci/mixtape/api/api/posts", {
+      method: "GET",
+      headers: new Headers({
+        'Content-Type': 'application/json',
+      })
+    })
+      .then(res => res.json())
+      .then(result => {
+        //console.log(result)
+        this.setState({
+          postsandcomments: result[0]
+        })
+      })
   }
 
   logout = () => {
@@ -23,10 +43,45 @@ export default class HomeScreen extends React.Component {
     });
   }
 
+  removecommentsfromlist = () => {
+    var holderarray = []
+    const allposts = this.state.postsandcomments;
+
+    allposts.forEach(post => {
+      if(post['parent'] == null){
+        holderarray.push(post)
+      }
+    });
+    
+    return holderarray
+  }
+
+  testloop = (array) => {
+    console.log(array)
+    var exampleret = array.map(post => (
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>Title : {post['content']}</Text>
+        <Text style={styles.cardTitle}>Prep Time:</Text>
+        <Text style={styles.cardTitle}>Ingredients:</Text>
+        <Text style={styles.cardTitle}>Steps:</Text>
+      </View>
+    ))
+    return exampleret
+  }
+
   render() {
+    //console.log("Loading posts...")
+    //console.log(this.state.posts)
+
     return (
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+
+          {this.testloop(this.removecommentsfromlist())}
+
+
+
+
           <View style={styles.card}>
             <Text style={styles.cardTitle}>Card Title</Text>
             <Text style={styles.cardDescription}>Card Description</Text>
@@ -34,7 +89,7 @@ export default class HomeScreen extends React.Component {
         </ScrollView>
         <Button title="Log Out" onPress={() => this.logout()} />
       </View>
-      
+
     );
   }
 }
