@@ -67,7 +67,7 @@ export default class LoginScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Image
-          source={require('../assets/images/logo.png')}
+          source={require('../assets/images/rpbooklogo1.png')}
           style={styles.welcomeImage}
         />
         <Text style={styles.loginText}>Login</Text>
@@ -100,7 +100,7 @@ export default class LoginScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fafafa',
+    backgroundColor: 'white',
     padding: 30
   },
   welcomeImage: {

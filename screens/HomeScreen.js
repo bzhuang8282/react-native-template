@@ -48,11 +48,11 @@ export default class HomeScreen extends React.Component {
     const allposts = this.state.postsandcomments;
 
     allposts.forEach(post => {
-      if(post['parent'] == null){
+      if (post['parent'] == null) {
         holderarray.push(post)
       }
     });
-    
+
     return holderarray
   }
 
@@ -60,10 +60,17 @@ export default class HomeScreen extends React.Component {
     console.log(array)
     var exampleret = array.map(post => (
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>Title : {post['content']}</Text>
-        <Text style={styles.cardTitle}>Prep Time:</Text>
+        <Text style={styles.cardTitle}>Title : {post['content'].split("/split")[0]}</Text>
+        {post['thumbnailURL'] ?
+          <Image
+            source={{ uri: post['thumbnailURL'].split(',')[0] }}
+            style={styles.welcomeImage}
+          /> : null}
+        <Text style={styles.cardTitle}>Prep Time:  {post['content'].split("/split")[1] + " Minutes"}</Text>
         <Text style={styles.cardTitle}>Ingredients:</Text>
-        <Text style={styles.cardTitle}>Steps:</Text>
+        <Text style={styles.cardContent}>{post['content'].split("/split")[2].replace(/,/g, "\n")}</Text>
+        <Text style={styles.cardTitle}>Steps: </Text>
+        <Text style={styles.cardContent}>{post['content'].split("/split")[3].replace(/,/g, "\n")}</Text>
       </View>
     ))
     return exampleret
@@ -76,16 +83,11 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-
+          <Image
+            source={require('../assets/images/logo.png')}
+            style={styles.welcomeImage}
+          />
           {this.testloop(this.removecommentsfromlist())}
-
-
-
-
-          <View style={styles.card}>
-            <Text style={styles.cardTitle}>Card Title</Text>
-            <Text style={styles.cardDescription}>Card Description</Text>
-          </View>
         </ScrollView>
         <Button title="Log Out" onPress={() => this.logout()} />
       </View>
@@ -106,6 +108,15 @@ const styles = StyleSheet.create({
   contentContainer: {
     padding: 20,
   },
+  welcomeImage: {
+    width: 300,
+    height: 240,
+    resizeMode: 'contain',
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 10,
+    marginBottom: 10
+  },
   card: {
     width: '100%',
     shadowColor: '#000',
@@ -113,13 +124,19 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 2,
     elevation: 2,
-    backgroundColor: 'white',
+    backgroundColor: '#e5e4e4',
     padding: 10,
     marginBottom: 10
   },
   cardTitle: {
-    fontSize: 20,
-    marginBottom: 10
+    fontSize: 22,
+    marginBottom: 10,
+    color: '#500000'
+  },
+  cardContent: {
+    fontSize: 18,
+    marginBottom: 10,
+    color: '#500000'
   },
   cardDescription: {
     fontSize: 12
